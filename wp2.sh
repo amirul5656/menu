@@ -212,7 +212,7 @@ add_domain() {
 server {
     listen 80;
     root $DOC_ROOT;
-    index index.php index.html index.htm index.nginx-debian.html;
+    index index.php index.html index.htm;
     server_name $NEW_DOMAIN www.$NEW_DOMAIN;
 
     location / {
@@ -221,7 +221,7 @@ server {
 
     location ~ \.php\$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock; # Pastikan ini sesuai dengan versi PHP Anda
     }
 
     location ~ /\.ht {
@@ -233,7 +233,7 @@ EOL
     # Enable Nginx configuration
     ln -s $NGINX_CONF $NGINX_LINK
 
-    # Test Nginx configuration and reload
+    # Test Nginx configuration
     if nginx -t; then
         systemctl reload nginx
         echo "Nginx configuration for $NEW_DOMAIN has been added successfully."
