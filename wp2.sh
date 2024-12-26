@@ -232,7 +232,15 @@ EOL
 
     # Enable Nginx configuration
     ln -s $NGINX_CONF $NGINX_LINK
-    nginx -t && systemctl reload nginx
+
+    # Test Nginx configuration and reload
+    if nginx -t; then
+        systemctl reload nginx
+        echo "Nginx configuration for $NEW_DOMAIN has been added successfully."
+    else
+        echo "Nginx configuration test failed. Please check the configuration."
+        exit 1
+    fi
 
     # Configure MariaDB
     mysql -u root -p"$MARIADB_ROOT_PASSWORD" <<EOF
