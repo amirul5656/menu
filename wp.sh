@@ -39,11 +39,12 @@ install_wordpress() {
     draw_box_title "WordPress Installation"
     
     # Check if running as root
-    if [[ $EUID -ne 0 ]]; then
+    if [[ $EUID -ne 0 ]]
+    then
         echo "This script must be run as root or with sudo"
         read -p "Press enter to continue..."
         return
-    }
+    fi
 
     read -p "Enter domain name (example: example.com): " DOMAIN
     read -p "Enter database name: " DB_NAME
