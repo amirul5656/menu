@@ -1,0 +1,123 @@
+#!/bin/bash
+
+# Colors
+BLUE='\033[0;34m'
+GREEN='\033[0;32m'
+WHITE='\033[1;37m'
+NC='\033[0m' # No Color
+
+# Function to draw a line
+draw_line() {
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+}
+
+# Function to draw a box with title
+draw_box_title() {
+    local title="$1"
+    echo -e "${BLUE}┌──────────────────────────────────────────────────┐${NC}"
+    echo -e "${BLUE}│${NC} ${WHITE}$title${NC}"
+    echo -e "${BLUE}└──────────────────────────────────────────────────┘${NC}"
+}
+
+# Function to display system information
+show_system_info() {
+    clear
+    draw_box_title "System Information"
+    echo -e "${BLUE}• ${NC}OS      : $(lsb_release -d | cut -f2)"
+    echo -e "${BLUE}• ${NC}RAM     : $(free -m | awk 'NR==2{printf "%s/%s MB\n", $3,$2 }')"
+    echo -e "${BLUE}• ${NC}DATE    : $(date +"%Y-%m-%d")"
+    echo -e "${BLUE}• ${NC}TIME    : $(date +"%H:%M:%S")"
+    echo -e "${BLUE}• ${NC}UPTIME  : $(uptime -p)"
+    echo -e "${BLUE}• ${NC}IP      : $(hostname -I | awk '{print $1}')"
+    echo -e "${BLUE}• ${NC}HOSTNAME: $(hostname)"
+    draw_line
+}
+
+# Main menu function
+show_menu() {
+    while true; do
+        show_system_info
+        echo
+        draw_box_title "Main Menu"
+        echo -e "${BLUE}[01]${NC} System Information     ${BLUE}[06]${NC} User Management"
+        echo -e "${BLUE}[02]${NC} Backup Management     ${BLUE}[07]${NC} View System Logs"
+        echo -e "${BLUE}[03]${NC} Service Management    ${BLUE}[08]${NC} Disk Usage"
+        echo -e "${BLUE}[04]${NC} System Updates        ${BLUE}[09]${NC} Process Monitor"
+        echo -e "${BLUE}[05]${NC} Network Diagnostics   ${BLUE}[10]${NC} Exit"
+        draw_line
+        echo
+        read -p "Select menu [1-10]: " choice
+
+        case $choice in
+            1) show_system_info; read -p "Press enter to continue..." ;;
+            2) 
+                clear
+                draw_box_title "Backup Management"
+                echo "1. Backup configuration files"
+                echo "2. Backup user data"
+                echo "3. Return to main menu"
+                draw_line
+                read -p "Select option: " subchoice
+                ;;
+            3) 
+                clear
+                draw_box_title "Service Management"
+                echo "1. View running services"
+                echo "2. Start a service"
+                echo "3. Stop a service"
+                draw_line
+                read -p "Select option: " subchoice
+                ;;
+            4) 
+                clear
+                draw_box_title "System Updates"
+                sudo apt update && sudo apt upgrade
+                read -p "Press enter to continue..."
+                ;;
+            5)
+                clear
+                draw_box_title "Network Diagnostics"
+                ping -c 4 8.8.8.8
+                draw_line
+                read -p "Press enter to continue..."
+                ;;
+            6)
+                clear
+                draw_box_title "User Management"
+                cut -d: -f1 /etc/passwd
+                draw_line
+                read -p "Press enter to continue..."
+                ;;
+            7)
+                clear
+                draw_box_title "System Logs"
+                tail -n 50 /var/log/syslog
+                draw_line
+                read -p "Press enter to continue..."
+                ;;
+            8)
+                clear
+                draw_box_title "Disk Usage"
+                df -h
+                draw_line
+                read -p "Press enter to continue..."
+                ;;
+            9)
+                clear
+                draw_box_title "Process Monitor"
+                top -n 1
+                draw_line
+                read -p "Press enter to continue..."
+                ;;
+            10) 
+                clear
+                echo "Thank you for using the system"
+                exit 0 
+                ;;
+            *) echo "Invalid option" ;;
+        esac
+    done
+}
+
+# Start the menu
+show_menu
